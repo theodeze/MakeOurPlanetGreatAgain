@@ -1,0 +1,42 @@
+{% load static %}
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if request.get_full_path == "/ventures" %}active{% endif %}">
+                    <a class="nav-link" href="/ventures">Explorer</a>
+                </li>
+                <li class="nav-item {% if request.get_full_path == "/ventures/create" %}active{% endif %}">
+                    <a class="nav-link" href="/ventures/create">Démarrer un projet</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto text-success title" href="/">Make Our Planet Green Again</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <form action="/ventures" method="get" class="navbar-nav form-inline ml-auto">
+                <input class="form-control mr-sm-2" type="search" name="search" placeholder="Rechercher" aria-label="Search">
+                <button class="btn btn-link text-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}   
+                <li class="nav-item {% if request.get_full_path == "/accounts/logout" %}active{% endif %}">
+                    <a class="nav-link" href="/accounts/logout">Déconnexion</a>
+                </li>
+                {% else %}
+                <li class="nav-item {% if request.get_full_path == "/accounts/login" %}active{% endif %}">
+                    <a class="nav-link {% if request.get_full_path == "/accounts/login" %}active{% endif %}" href="/accounts/login">Connexion</a>
+                </li>
+                {% endif %}
+            </ul>
+            {% if user.is_authenticated %}   
+            <a class="nav-link" href="/accounts/profile/"><img class="rounded-circle" width="45" src="{% get_media_prefix %}{{ user.avatar }}" alt=""></a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

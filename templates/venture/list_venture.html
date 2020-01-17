@@ -1,0 +1,29 @@
+{% load static %}
+
+<div id="list_venture" class="d-flex card-columns">
+{% for venture in ventures %}
+    <div class="card flex-fill m-2 shadow-sm">
+        <a href="/ventures/{{ venture.id }}">
+            <img class="card-img-top" w src="{% get_media_prefix %}{{ venture.banner }}" alt="Card image cap" ></img>
+        </a>
+        <div class="card-body">
+            <a class="card-title h4 text-success" href="/ventures/{{ venture.id }}">{{ venture.name }}</a>
+            <p class="card-text text-muted">{{ venture.summary }}</p>
+        {% if venture.is_over %}
+        </div>
+        <div class="card-footer">
+            <p>par <b>{{ venture.creator.username }}</b> et {{ venture.contributors }} contributeurs</p>
+        </div>
+        {% else %}
+        <p class="small">par <b>{{ venture.creator.username }}</b></p>
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ venture.percent }}%" aria-valuenow="{{ venture.percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <small class="text-success">{{ venture.amount }} € engagés</small><br/>
+        <small class="text-muted">{{ venture.percent }} % financé</small><br/>
+        <small class="text-muted">{{ venture.remaining_days }} jours</small>
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>

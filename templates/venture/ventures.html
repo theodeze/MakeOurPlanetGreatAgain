@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block header %}
+<style>
+.progress {
+    height: 5px;
+}
+
+.card {
+    height: auto;
+    max-width: 340px;
+}
+
+.card-footer {
+    background-color: transparent;
+}
+
+.card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<p>Explorez <span class="text-success">{{ ventures|length }} projets</span></p>
+
+<div class="row">
+    <div class="col">
+        <button class="sort btn btn-outline-success" id="sort-aplha"><i id="sort-alpha-fa" class="fas fa-sort-alpha-up"></i></button>
+        <button class="sort btn btn-outline-success" id="sort-new"><i id="sort-new-fa" class="fas fa-sort-numeric-up"></i></button>
+    </div>
+    <div class="col">
+        <a href="/ventures/rss" class="button float-right btn btn-success"><i class="fa fa-rss"></i></a>
+    </div>
+</div>
+
+<p>
+    <a class="text-muted" data-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+        Plus de filtres
+    </a>
+</p>
+<div class="collapse m-2" id="collapseFilter">
+    <div class="card card-body">
+        <select name="filter-state" class="m-md-1 filter custom-select" id="filter-state">
+            <option value="0">Tous les projets</option>
+            <option value="1">Projets en cours</option>
+            <option value="2">Projets intégralement financés</option>
+        </select>
+        <select name="filter-amount" class="m-md-1 filter custom-select" id="filter-amount">
+            <option value="0">Montant engagé</option>
+            <option value="1">< 1 000€ engagés</option>
+            <option value="2">De 1 000 € à 10 000 €</option>
+            <option value="3">De 10 000 € à 100 000 €</option>
+            <option value="4">De 1000 000 € à 1 000 000 €</option>
+            <option value="5">> 1 000 000 € engagés</option>
+        </select>
+        <select name="filter-goal" class="m-md-1 filter custom-select" id="filter-goal">
+            <option value="0">Objectif</option>
+            <option value="1">< 1 000€ objectif</option>
+            <option value="2">De 1 000 € à 10 000 €</option>
+            <option value="3">De 10 000 € à 100 000 €</option>
+            <option value="4">De 1000 000 € à 1 000 000 €</option>
+            <option value="5">> 1 000 000 € objectif</option>
+        </select>
+        <select name="filter-percent" class="m-md-1 filter custom-select" id="filter-percent">
+            <option value="0">% de financement</option>
+            <option value="1">Projets financés à moins de 75 %</option>
+            <option value="2">Projets financés de 75 % à 100 %</option>
+            <option value="3">Projets finanacé à 100 % et plus</option>
+        </select>
+    </div>
+</div>
+
+{% include 'venture/list_venture.html'%}
+
+<div class='row'>
+    <div class="col-sm-auto ml-auto mr-auto">
+        <button class="button btn btn-success" id="more">Plus de projets</button>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    function filter() {
+        var dict = {};
+        dict.filter_state = $('#filter-state').children("option:selected").val();
+        dict.filter_amount = $('#filter-amount').children("option:selected").val();
+        dict.filter_goal = $('#filter-goal').children("option:selected").val();
+        dict.filter_percent = $('#filter-percent').children("option:selected").val();
+        return dict;
+    } 
+
+    function sort() {
+        var dict = {};
+        dict.sort_alpha = $('#sort-aplha').hasClass('btn-success') ? 
+            ($('#sort-alpha-fa').hasClass('fa-sort-alpha-up') ? 2 : 1)  : 0;
+        dict.sort_new = $('#sort-new').hasClass('btn-success') ? 
+            ($('#sort-new-fa').hasClass('fa-sort-numeric-up') ? 2 : 1)  : 0;
+        return dict;
+    }
+
+    function switchClass(i, newClass) {
+        $(i).removeClass().addClass(newClass);
+    } 
+
+    function update() {
+        $.ajax({
+            'method': 'GET',
+            'url': 'ventures',
+            'data': Object.assign({}, sort(), filter()),
+            success: function(data) {
+                $('#list_venture').replaceWith(data);
+            }
+        });
+    }
+
+    $('.sort').click(function() {
+        if ($(this).hasClass('btn-success')) {
+            var i = $(this).children(0).get(0);
+            if ($(i).hasClass('fa-sort-alpha-up')) {
+                switchClass(i, 'fas fa-sort-alpha-down');
+            } else if ($(i).hasClass('fa-sort-alpha-down')) {
+                switchClass(i, 'fas fa-sort-alpha-up');
+            } else if ($(i).hasClass('fa-sort-numeric-up')) {
+                switchClass(i, 'fas fa-sort-numeric-down');
+            } else if ($(i).hasClass('fa-sort-numeric-down')) {
+                switchClass(i, 'fas fa-sort-numeric-up');
+            }
+        } else {
+            $('.sort').addClass("btn-outline-success");
+            $('.sort').removeClass("btn-success");
+            $(this).removeClass("btn-outline-success");
+            $(this).addClass("btn-success");
+        }
+        update();
+    });
+
+    $('.filter').change(function() {
+        update();
+    });
+});
+
+</script>
+
+{% endblock %}

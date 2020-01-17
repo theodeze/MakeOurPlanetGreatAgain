@@ -1,0 +1,7 @@
+media/banner
+/static
+__pycache__
+migrations
+*.sqlite3
+.vscode
+.venv
