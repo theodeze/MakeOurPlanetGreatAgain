@@ -126,3 +126,6 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'authentication.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
