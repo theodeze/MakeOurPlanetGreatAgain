@@ -8,3 +8,4 @@ migrations
 .gitignore
 .git
 docker.sh
+DB.png
