@@ -1,8 +1,8 @@
-media/banner
+#media/banner
 /static
 __pycache__
 migrations
-*.sqlite3
+#*.sqlite3
 .vscode
 .venv
 .gitignore

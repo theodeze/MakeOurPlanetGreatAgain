@@ -51,9 +51,9 @@ def filter(request, ventures):
     filter_state = request.GET.get('filter_state')
     from django.db.models import Prefetch, Sum, F
     from django.db.models.functions import Coalesce
-    ventures = ventures.annotate(amount_current=Coalesce(Sum('pledge__amount'),0)).exclude(pledge__amount__isnull=True)
-    ventures = ventures.annotate(percent_current=F('pledge__amount')*100/F('goal'))
-    
+    ventures = ventures.annotate(amount_current=Coalesce(Sum('pledge__amount'),0)).exclude(amount_current__isnull=True)
+    ventures = ventures.annotate(percent_current=F('amount_current')*100/F('goal'))
+ 
     filter_amount = request.GET.get('filter_amount')
     if filter_amount == '1':
         ventures =ventures.filter(amount_current__lt=1000)
